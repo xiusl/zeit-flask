@@ -7,6 +7,36 @@ import datetime, time
 from werkzeug.security import generate_password_hash, check_password_hash
 import hmac, hashlib, base64
 
+
+class VerifyCode(Document):
+    meta = {
+        'db_alias': 'heroku_rnz54xf1',
+        'index_background': True,
+        'indexes': [
+            'key',
+            {'fields': ('expired_at', ), 'expireAfterSeconds': 0},
+        ],
+    }
+
+    id = ObjectIdField(primary_key=True, default=ObjectId)
+    key = StringField()
+    code = StringField()
+    expired_at = DateTimeField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+    @classmethod
+    def get(cls, key):
+        return cls.objects(key=key).first()
+
+    @classmethod
+    def create(cls, key, ttl=600):
+        vc = cls(key=key)
+        vc.code = str(random.randint(1000, 9999))
+        vc.expired_at = datetime.datetime.now() + \
+            datetime.timedelta(seconds=ttl)
+        vc.save()
+        return vc
+
 def hmac_sha256(key, message):
     key = key.encode('utf8')
     message = message.encode('utf8')
@@ -27,9 +57,10 @@ class User(Document):
     password = StringField()
     avatar = StringField()
     desc = StringField()
-    type = IntField()
-    level = IntField()
+    type = IntField(default=0)
+    level = IntField(default=0)
     created_at = DateTimeField(default=datetime.datetime.now)
+    status = IntField(default=0)
 
     def save(self, *args, **kwargs):
         if self.password and \

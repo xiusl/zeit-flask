@@ -2,10 +2,11 @@
 # author:xsl
 
 from __future__ import absolute_import
-from models import User
+from models import User, VerifyCode
 from . import user_api
 from flask import request, abort, current_app, jsonify
 from bson import ObjectId
+from app.utils import send_email_code, login_required
 
 
 @user_api.route('/register', methods=['POST'])
@@ -38,4 +39,12 @@ def auth():
     if not u.check_password(password):
         return jsonify({"msg": "Password error"}), 400
     return jsonify({"data": u.to_json(with_token=True)}), 200
+
+@login_required
+@user_api.route('/verify', methods=['POST'])
+def verify():
+    u = current_app.user
+    if not u:
+        return jsonify({"msg": "User not Found"}), 404
+    return jsonify({"data": u.to_json()}), 200
 
