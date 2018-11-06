@@ -3,5 +3,9 @@
   "type": "docker",
   "features": {
     "cloud": "v2"
+  },
+  "env": {
+    "MONGO_DB": "heroku_rnz54xf1",
+    "MONGO_URL": "mongodb://shilin:xiushilin01.@ds157723.mlab.com:57723/heroku_rnz54xf1"
   }
 }
