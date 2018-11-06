@@ -37,6 +37,8 @@ class User(Document):
             self.password = generate_password_hash(self.password)
         if not self.avatar:
             self.avatar = 'https://image.sleen.top/default.jpg'
+        if not self.name:
+            self.name = self.email.split("@")[0]
         return super(User, self).save(*args, **kwargs)
 
     def check_password(self, password):
@@ -80,6 +82,8 @@ class User(Document):
             "name": self.name,
             "desc": self.desc,
             "avatar": self.avatar,
+            "email": self.email,
+            "created_at": self.created_at
         }
         if with_token:
             user_json["token"] = self.get_token()
