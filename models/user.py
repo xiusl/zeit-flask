@@ -31,7 +31,7 @@ class User(Document):
     level = IntField()
     created_at = DateTimeField(default=datetime.datetime.now)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.password and \
             (self.password.count('$') < 2 or len(self.password) < 50):
             self.password = generate_password_hash(self.password)

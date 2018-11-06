@@ -3,3 +3,13 @@
 !app
 !manager.py
 !now.json
+!models
+
+pyenv/*
+.idea/*
+*.py[cod]
+__pycache__/
+*.pyc
+.DS_Store
+
+
