@@ -1,4 +1,5 @@
 {
+  "name": "flask",
   "public": true,
   "type": "docker",
   "features": {
